@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter_insta/flutter_insta.dart';
 import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
@@ -60,6 +63,22 @@ class _InstagramVideoDownloaderState extends State<InstagramVideoDownloader> {
     // };
   }
 
+  downloadVideoWithDio() async {
+    String? videoUrl = await flutterInsta
+        .downloadReels("https://www.instagram.com/reel/CDlGkdZgB2y/"); //URL
+    String filename = DateTime.now().toString();
+    Dio dio = Dio();
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    await dio.download(videoUrl, '$dir/$filename',
+        onReceiveProgress: (received, total) {
+      if (total != -1) {
+        /// show progress
+        print(
+            "Download percent: ${(received / total * 100).toStringAsFixed(0)}%");
+      }
+    });
+  }
+
   _downloadVideo() async {
     String? videoUrl = await flutterInsta
         .downloadReels("https://www.instagram.com/reel/CDlGkdZgB2y/"); //URL
@@ -97,7 +116,7 @@ class _InstagramVideoDownloaderState extends State<InstagramVideoDownloader> {
       body: Center(
         child: TextButton(
             onPressed: () {
-              _downloadVideo();
+              downloadVideoWithDio();
             },
             child: Text("Downlaod Video")),
       ),
