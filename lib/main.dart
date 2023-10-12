@@ -44,23 +44,21 @@ class _InstagramVideoDownloaderState extends State<InstagramVideoDownloader> {
     // });
   }
 
-  extractData(String link) async {
-    // final response = await http.get(Uri.parse(link));
-    String downloadLink = await flutterInsta
-        .downloadReels("https://www.instagram.com/reel/CDlGkdZgB2y/"); //URL
+  extractUrlWithHttp(String link) async {
+    final response = await http.get(Uri.parse(link));
 
-    // print("response: ${response.body}");
+    print("response: ${response.body}");
 
-    // final RegExp videoRegex = RegExp(r'videoURL":"(https:\/\/[^"]+.mp4)"');
-    // final RegExp usernameRegex = RegExp(r'username":"([^"]+)"');
+    final RegExp videoRegex = RegExp(r'videoURL":"(https:\/\/[^"]+.mp4)"');
+    final RegExp usernameRegex = RegExp(r'username":"([^"]+)"');
 
-    // final videoMatch = videoRegex.firstMatch(response.body);
-    // final usernameMatch = usernameRegex.firstMatch(response.body);
+    final videoMatch = videoRegex.firstMatch(response.body);
+    final usernameMatch = usernameRegex.firstMatch(response.body);
 
-    // return {
-    //   'videoUrl': videoMatch?.group(1),
-    //   'username': usernameMatch?.group(1)
-    // };
+    return {
+      'videoUrl': videoMatch?.group(1),
+      'username': usernameMatch?.group(1)
+    };
   }
 
   downloadVideoWithDio() async {
